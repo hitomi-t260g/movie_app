@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 const search = () => {
+    const [category, setCategory] = useState('all')
     const [results, setResults] = useState([])
     const router = useRouter()
     // router.query.xxx にてurlの?xxx=yyy のyyyの値を取り出す
@@ -34,13 +35,21 @@ const search = () => {
                         item.media_type === 'movie' || item.media_type === 'tv',
                 )
                 setResults(validResults)
-                console.log(results)
             } catch (error) {
                 console.log(error)
             }
         }
         fetchMedia()
     }, [searchQuery])
+
+    // 取得した20件の中から絞り込み結果を行う
+    const filteredResults = results.filter(result => {
+        if (category === 'all') {
+            return results
+        }
+        return result.media_type === category
+    })
+    console.log(filteredResults)
 
     return (
         <AppLayout
@@ -52,9 +61,9 @@ const search = () => {
             <Head>
                 <title>Laravel - Search</title>
             </Head>
-            <Layout sidebar={<Sidebar />}>
+            <Layout sidebar={<Sidebar setCategory={setCategory} />}>
                 <Grid container spacing={3}>
-                    <MediaCard /> 
+                    <MediaCard />
                 </Grid>
             </Layout>
         </AppLayout>
