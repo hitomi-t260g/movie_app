@@ -19,7 +19,7 @@ const Home = () => {
                 // eslint-disable-next-line no-unused-vars
                 const response = await axios.get('api/getPopularMovies')
                 setMovies(response.data.results)
-                console.log('movies', movies)
+                // console.log('movies', movies)
             } catch (err) {
                 console.log(err)
             }
