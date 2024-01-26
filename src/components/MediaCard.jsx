@@ -6,6 +6,7 @@ import {
     Grid,
     Typography,
 } from '@mui/material'
+import Link from 'next/link'
 import React from 'react'
 
 const MediaCard = props => {
@@ -17,19 +18,24 @@ const MediaCard = props => {
         <Grid item xs={12} sm={6} md={4} lg={3}>
             <Card>
                 <CardActionArea>
-                    <CardMedia
-                        component={'img'}
-                        sx={{ aspectRatio: '2/3' }}
-                        image={mediaPath}
-                    />
-                    <CardContent>
-                        <Typography variant="h6" component="div" noWrap>
-                            {media.title || media.name}
-                        </Typography>
-                        <Typography variant="subtitle1" color="textSecondary">
-                            公開日:{media.release_date || media.first_air_date}
-                        </Typography>
-                    </CardContent>
+                    <Link href={`/detail/${media.media_type}/${media.id}`}>
+                        <CardMedia
+                            component={'img'}
+                            sx={{ aspectRatio: '2/3' }}
+                            image={mediaPath}
+                        />
+                        <CardContent>
+                            <Typography variant="h6" component="div" noWrap>
+                                {media.title || media.name}
+                            </Typography>
+                            <Typography
+                                variant="subtitle1"
+                                color="textSecondary">
+                                公開日:
+                                {media.release_date || media.first_air_date}
+                            </Typography>
+                        </CardContent>
+                    </Link>
                 </CardActionArea>
             </Card>
         </Grid>

@@ -2,7 +2,7 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import Layout from '@/components/Layouts/Layout'
 import MediaCard from '@/components/MediaCard'
 import Sidebar from '@/components/Sidebar'
-import { Grid } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react'
 const search = () => {
     const [category, setCategory] = useState('all')
     const [results, setResults] = useState([])
+    const [loading, setLoading] = useState(true)
     const router = useRouter()
     // router.query.xxx にてurlの?xxx=yyy のyyyの値を取り出す
     // const query = router.query.query
@@ -37,6 +38,8 @@ const search = () => {
                 setResults(validResults)
             } catch (error) {
                 console.log(error)
+            } finally {
+                setLoading(false)
             }
         }
         fetchMedia()
@@ -49,7 +52,6 @@ const search = () => {
         }
         return result.media_type === category
     })
-    console.log(filteredResults)
 
     return (
         <AppLayout
@@ -62,11 +64,23 @@ const search = () => {
                 <title>Laravel - Search</title>
             </Head>
             <Layout sidebar={<Sidebar setCategory={setCategory} />}>
-                <Grid container spacing={3}>
-                    {filteredResults.map(media => (
-                        <MediaCard key={media.id} media={media}/>
-                    ))}
-                </Grid>
+                {/* 検索結果及びloading結果によりカード表示を変更する */}
+                {/* loadingによるだし訳がないと,リロードした際、初期表示時に見つかりませんでしたとでてしまう */}
+                {loading ? (
+                    <Grid item textAlign="center" xs={12}>
+                        <Typography>検索中...</Typography>
+                    </Grid>
+                ) : filteredResults.length > 0 ? (
+                    <Grid container spacing={3}>
+                        {filteredResults.map(media => (
+                            <MediaCard key={media.id} media={media} />
+                        ))}
+                    </Grid>
+                ) : (
+                    <Grid item textAlign="center" xs={12}>
+                        <Typography>検索結果が見つかりませんでした</Typography>
+                    </Grid>
+                )}
             </Layout>
         </AppLayout>
     )
