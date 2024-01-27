@@ -2,10 +2,27 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import { Box, Container, Grid, Typography } from '@mui/material'
 import laravelAxios from '@/lib/laravelAxios'
 import Head from 'next/head'
-import React, { StrictMode } from 'react'
+import React, { StrictMode, useEffect } from 'react'
 
 const Detail = props => {
-    const { detail, media_type } = props
+    const { detail, media_type, media_id } = props
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await laravelAxios.get(
+                    `api/reviews/${media_type}/${media_id}`,
+                )
+                console.log(response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        fetchReviews()
+
+        // urlが変わるとfetchするようにする
+    }, [media_type, media_id])
 
     return (
         <StrictMode>
