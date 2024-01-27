@@ -1,8 +1,8 @@
-import axios from '@/lib/laravelAxios'
+import laravelAxios from '@/lib/laravelAxios'
 
 export default async function handler(req, res) {
     try {
-        const response = await axios(
+        const response = await laravelAxios(
             `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.TMDB_API_KEY}&language=ja-JP`,
         )
         res.status(200).json(response.data)

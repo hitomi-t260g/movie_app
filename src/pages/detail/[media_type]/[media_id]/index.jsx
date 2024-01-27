@@ -1,6 +1,6 @@
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Box, Container, Grid, Typography } from '@mui/material'
-import axios from '@/lib/laravelAxios'
+import laravelAxios from '@/lib/laravelAxios'
 import Head from 'next/head'
 import React, { StrictMode } from 'react'
 
@@ -94,12 +94,12 @@ export async function getServerSideProps(context) {
     // サーバーサイドなので、process.envから読み込んでもブラウザ側へ表示されることがない。このことを意識して利用する
 
     try {
-        const JpResponse = await axios.get(
+        const JpResponse = await laravelAxios.get(
             `https://api.themoviedb.org/3/${media_type}/${media_id}?api_key=${process.env.TMDB_API_KEY}&language=ja-JP`,
         )
         let combinedData = { ...JpResponse.data }
         if (!JpResponse.data.overview) {
-            const EnResponse = await axios.get(
+            const EnResponse = await laravelAxios.get(
                 `https://api.themoviedb.org/3/${media_type}/${media_id}?api_key=${process.env.TMDB_API_KEY}&language=en-EN`,
             )
             combinedData.overview = EnResponse.data.overview

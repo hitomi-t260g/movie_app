@@ -1,5 +1,5 @@
 import AppLayout from '@/components/Layouts/AppLayout'
-import axios from '@/lib/laravelAxios'
+import laravelAxios from '@/lib/laravelAxios'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 // Import Swiper React components
@@ -17,7 +17,7 @@ const Home = () => {
         const fetchMovies = async () => {
             try {
                 // eslint-disable-next-line no-unused-vars
-                const response = await axios.get('api/getPopularMovies')
+                const response = await laravelAxios.get('api/getPopularMovies')
                 setMovies(response.data.results)
                 // console.log('movies', movies)
             } catch (err) {
