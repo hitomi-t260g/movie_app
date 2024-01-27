@@ -10,3 +10,7 @@ const laravelAxios = Axios.create({
 })
 
 export default laravelAxios
+// laravelのAPIエンドポイントを呼び出す時の例
+//laravelAxios自体にbaseURLが設定されているので、'https://localhost:8000/api/reviews'を指定している
+// laravelAxios.get(`/api/reviews`)
+// laravelAxios.post(`/api/reviews`)

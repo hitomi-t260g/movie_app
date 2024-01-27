@@ -1,5 +1,4 @@
 import AppLayout from '@/components/Layouts/AppLayout'
-import laravelAxios from '@/lib/laravelAxios'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 // Import Swiper React components
@@ -10,6 +9,7 @@ import 'swiper/css'
 import { CardMedia, Typography } from '@mui/material'
 import Link from 'next/link'
 import SearchBar from '@/components/SearchBar'
+import axios from 'axios'
 
 const Home = () => {
     const [movies, setMovies] = useState([])
@@ -17,7 +17,7 @@ const Home = () => {
         const fetchMovies = async () => {
             try {
                 // eslint-disable-next-line no-unused-vars
-                const response = await laravelAxios.get('api/getPopularMovies')
+                const response = await axios.get('api/getPopularMovies')
                 setMovies(response.data.results)
                 // console.log('movies', movies)
             } catch (err) {

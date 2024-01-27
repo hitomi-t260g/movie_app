@@ -1,4 +1,4 @@
-import laravelAxios from '@/lib/laravelAxios'
+import axios from 'axios'
 
 export default async (req, res) => {
     const { searchQuery } = req.query
@@ -9,7 +9,7 @@ export default async (req, res) => {
 
     try {
         // homeでエンコードしているはずが、uriから取得する際にデコードされxmlエラーがおきるため再度エンコードする
-        const response = await laravelAxios.get(
+        const response = await axios.get(
             `https://api.themoviedb.org/3/search/multi?api_key=${
                 process.env.TMDB_API_KEY
             }&query=${encodeURIComponent(searchQuery)}&language=ja-JP`,

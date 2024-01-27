@@ -2,8 +2,8 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import Layout from '@/components/Layouts/Layout'
 import MediaCard from '@/components/MediaCard'
 import Sidebar from '@/components/Sidebar'
-import laravelAxios from '@/lib/laravelAxios'
 import { Grid, Typography } from '@mui/material'
+import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -27,7 +27,7 @@ const search = () => {
         const fetchMedia = async () => {
             try {
                 // APIを呼び出す際、env内容がブラウザに表示されることをさけるため、サーバー側のapiを非同期で呼び出す
-                const response = await laravelAxios.get(
+                const response = await axios.get(
                     `api/searchMedia?searchQuery=${searchQuery}`,
                 )
                 const searchResults = response.data.results
