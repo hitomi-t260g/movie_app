@@ -1,22 +1,26 @@
 import AppLayout from '@/components/Layouts/AppLayout'
 import {
     Box,
+    Button,
     Card,
     CardContent,
     Container,
     Fab,
     Grid,
+    Modal,
     Rating,
+    TextareaAutosize,
     Tooltip,
     Typography,
 } from '@mui/material'
 import laravelAxios from '@/lib/laravelAxios'
 import Head from 'next/head'
-import React, { StrictMode, useEffect } from 'react'
+import React, { StrictMode, useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 
 const Detail = props => {
     const { detail, media_type, media_id } = props
+    const [open, setOpen] = useState(false)
 
     const reviews = [
         {
@@ -194,12 +198,44 @@ const Detail = props => {
                     <Tooltip title="レビュー追加">
                         <Fab
                             style={{ background: '#1976d2', color: 'white' }}
-                            sx={{ ':hover': { opacity: '0.8' } }}>
+                            sx={{ ':hover': { opacity: '0.8' } }}
+                            onClick={() => setOpen(true)}>
                             <AddIcon />
                         </Fab>
                     </Tooltip>
                 </Box>
                 {/* レビュー投稿ボタンはここまで */}
+
+                {/* レビュー投稿用モーダルウィンドウ */}
+                <Modal open={open} onClose={() => setOpen(false)}>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #000',
+                            boxShadow: 24,
+                            p: 4,
+                        }}>
+                        <Typography variant="h6" component="h2">
+                            レビューを書く
+                        </Typography>
+                        <Rating required />
+                        <TextareaAutosize
+                            required
+                            minRows={5}
+                            placeholder="レビュー内容"
+                            style={{ width: '100%', marginTop: '10px' }}
+                        />
+                        <Button valiant="outlined" color="secondary">
+                            送信
+                        </Button>
+                    </Box>
+                </Modal>
+                {/* レビュー投稿用モーダルウィンドウ はここまで*/}
             </AppLayout>
         </StrictMode>
     )
