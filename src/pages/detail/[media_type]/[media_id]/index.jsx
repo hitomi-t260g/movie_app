@@ -1,11 +1,11 @@
 import AppLayout from '@/components/Layouts/AppLayout'
 import { Box, Container, Grid, Typography } from '@mui/material'
-import axios from 'axios'
+import axios from '@/lib/laravelAxios'
 import Head from 'next/head'
 import React, { StrictMode } from 'react'
 
 const Detail = props => {
-    const { detail } = props
+    const { detail, media_type } = props
 
     return (
         <StrictMode>
@@ -69,13 +69,15 @@ const Detail = props => {
                             </Grid>
                             <Grid item md={8}>
                                 <Typography variant="h4" paragraph>
-                                    {detail.title}
+                                    {detail.title || detail.name}
                                 </Typography>
                                 <Typography paragraph>
                                     {detail.overview}
                                 </Typography>
                                 <Typography valiant="h6">
-                                    公開日：{detail.release_date}
+                                    {media_type === 'movie'
+                                        ? `公開日：${detail.release_date}`
+                                        : `初回放送日：${detail.first_air_date}`}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -105,6 +107,8 @@ export async function getServerSideProps(context) {
         return {
             props: {
                 detail: combinedData,
+                media_type,
+                media_id,
             },
         }
     } catch (error) {
