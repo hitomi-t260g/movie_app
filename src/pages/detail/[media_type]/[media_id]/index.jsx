@@ -4,13 +4,16 @@ import {
     Card,
     CardContent,
     Container,
+    Fab,
     Grid,
     Rating,
+    Tooltip,
     Typography,
 } from '@mui/material'
 import laravelAxios from '@/lib/laravelAxios'
 import Head from 'next/head'
 import React, { StrictMode, useEffect } from 'react'
+import AddIcon from '@mui/icons-material/Add'
 
 const Detail = props => {
     const { detail, media_type, media_id } = props
@@ -178,6 +181,25 @@ const Detail = props => {
                         })}
                     </Grid>
                 </Container>
+                {/* レビュー表示はここまで */}
+
+                {/* レビュー投稿投稿ボタン */}
+                <Box
+                    sx={{
+                        position: 'fixed',
+                        bottom: '16px',
+                        right: '16px',
+                        zIndex: 5,
+                    }}>
+                    <Tooltip title="レビュー追加">
+                        <Fab
+                            style={{ background: '#1976d2', color: 'white' }}
+                            sx={{ ':hover': { opacity: '0.8' } }}>
+                            <AddIcon />
+                        </Fab>
+                    </Tooltip>
+                </Box>
+                {/* レビュー投稿ボタンはここまで */}
             </AppLayout>
         </StrictMode>
     )
