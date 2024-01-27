@@ -152,38 +152,43 @@ const Detail = props => {
                         component={'h1'}
                         variant="h4"
                         align="center"
-                        gutterButtom>
+                        gutterBottom>
                         レビュー一覧
                     </Typography>
-
-                    <Grid container spacing={3}>
-                        {reviews.map(review => {
-                            return (
-                                <Grid item key={review.id} xs={12}>
-                                    <Card>
-                                        <CardContent>
-                                            <Typography
-                                                component="div"
-                                                variant="h6"
-                                                gutterButtom>
-                                                {review.user.name}
-                                            </Typography>
-                                            <Rating
-                                                value={review.rating}
-                                                readOnly
-                                            />
-                                            <Typography
-                                                variant="body2"
-                                                color="textSecondary"
-                                                paragraph>
-                                                {review.content}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            )
-                        })}
-                    </Grid>
+                    {reviews.length > 0 ? (
+                        <Grid container spacing={3}>
+                            {reviews.map(review => {
+                                return (
+                                    <Grid item key={review.id} xs={12}>
+                                        <Card>
+                                            <CardContent>
+                                                <Typography
+                                                    component="div"
+                                                    variant="h6"
+                                                    gutterButtom>
+                                                    {review.user.name}
+                                                </Typography>
+                                                <Rating
+                                                    value={review.rating}
+                                                    readOnly
+                                                />
+                                                <Typography
+                                                    variant="body2"
+                                                    color="textSecondary"
+                                                    paragraph>
+                                                    {review.content}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                )
+                            })}
+                        </Grid>
+                    ) : (
+                        <Grid item textAlign="center" xs={12}>
+                            <Typography>レビューはまだありません</Typography>
+                        </Grid>
+                    )}
                 </Container>
                 {/* レビュー表示はここまで */}
 
