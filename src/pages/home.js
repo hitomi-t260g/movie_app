@@ -1,5 +1,4 @@
 import AppLayout from '@/components/Layouts/AppLayout'
-import axios from 'axios'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 // Import Swiper React components
@@ -9,6 +8,8 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import { CardMedia, Typography } from '@mui/material'
 import Link from 'next/link'
+import SearchBar from '@/components/SearchBar'
+import axios from 'axios'
 
 const Home = () => {
     const [movies, setMovies] = useState([])
@@ -18,7 +19,7 @@ const Home = () => {
                 // eslint-disable-next-line no-unused-vars
                 const response = await axios.get('api/getPopularMovies')
                 setMovies(response.data.results)
-                console.log('movies', movies)
+                // console.log('movies', movies)
             } catch (err) {
                 console.log(err)
             }
@@ -36,6 +37,7 @@ const Home = () => {
             <Head>
                 <title>Laravel - Home</title>
             </Head>
+            <SearchBar />
             <Swiper
                 spaceBetween={30}
                 slidesPerView={5}
