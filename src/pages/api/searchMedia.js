@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '@/lib/laravelAxios'
 
 export default async (req, res) => {
     const { searchQuery } = req.query

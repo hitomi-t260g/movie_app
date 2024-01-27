@@ -1,5 +1,5 @@
 import AppLayout from '@/components/Layouts/AppLayout'
-import axios from 'axios'
+import axios from '@/lib/laravelAxios'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 // Import Swiper React components
