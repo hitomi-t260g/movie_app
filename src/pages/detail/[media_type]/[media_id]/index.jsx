@@ -21,6 +21,8 @@ import AddIcon from '@mui/icons-material/Add'
 const Detail = props => {
     const { detail, media_type, media_id } = props
     const [open, setOpen] = useState(false)
+    const [rate, setRate] = useState()
+    const [comment, setComment] = useState('')
 
     const reviews = [
         {
@@ -50,13 +52,15 @@ const Detail = props => {
         },
     ]
 
+    // commentはスペースも考慮しtrimするのを忘れないように
+    const isDisabled = !rate || !comment.trim()
+
     useEffect(() => {
         const fetchReviews = async () => {
             try {
                 const response = await laravelAxios.get(
                     `api/reviews/${media_type}/${media_id}`,
                 )
-                console.log(response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -228,14 +232,23 @@ const Detail = props => {
                         <Typography variant="h6" component="h2">
                             レビューを書く
                         </Typography>
-                        <Rating required />
+                        <Rating
+                            required
+                            onChange={(e, newValue) => setRate(newValue)}
+                            value={rate}
+                        />
                         <TextareaAutosize
                             required
                             minRows={5}
                             placeholder="レビュー内容"
                             style={{ width: '100%', marginTop: '10px' }}
+                            onChange={e => setComment(e.target.value)}
+                            value={comment}
                         />
-                        <Button valiant="outlined" color="secondary">
+                        <Button
+                            valiant="outlined"
+                            color="secondary"
+                            disabled={isDisabled}>
                             送信
                         </Button>
                     </Box>
