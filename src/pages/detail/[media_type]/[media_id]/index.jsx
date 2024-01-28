@@ -71,6 +71,21 @@ const Detail = props => {
         // urlが変わるとfetchするようにする
     }, [media_type, media_id])
 
+    const handleReviewAdd = async () => {
+        try {
+            const response = await laravelAxios.post(`api/reviews`, {
+                content: comment,
+                rating: rate,
+                media_type: media_type,
+                media_id: media_id,
+            })
+            setComment(response.data.comment)
+            setRate(response.data.rating)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <StrictMode>
             <AppLayout
@@ -248,7 +263,8 @@ const Detail = props => {
                         <Button
                             valiant="outlined"
                             color="secondary"
-                            disabled={isDisabled}>
+                            disabled={isDisabled}
+                            onClick={handleReviewAdd}>
                             送信
                         </Button>
                     </Box>
