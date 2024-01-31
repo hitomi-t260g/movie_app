@@ -21,36 +21,9 @@ import AddIcon from '@mui/icons-material/Add'
 const Detail = props => {
     const { detail, media_type, media_id } = props
     const [open, setOpen] = useState(false)
-    const [rate, setRate] = useState()
+    const [rate, setRate] = useState(0)
     const [comment, setComment] = useState('')
-
-    const reviews = [
-        {
-            id: 1,
-            content: '面白かった',
-            rating: 5,
-            user: {
-                name: '山田花子',
-            },
-        },
-        {
-            id: 2,
-            content:
-                '泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。泣きました。',
-            rating: 4,
-            user: {
-                name: '山田次郎',
-            },
-        },
-        {
-            id: 3,
-            content: '面白くなかった',
-            rating: 1,
-            user: {
-                name: '山田三郎',
-            },
-        },
-    ]
+    const [reviews, setReviews] = useState([])
 
     // commentはスペースも考慮しtrimするのを忘れないように
     const isDisabled = !rate || !comment.trim()
@@ -61,6 +34,7 @@ const Detail = props => {
                 const response = await laravelAxios.get(
                     `api/reviews/${media_type}/${media_id}`,
                 )
+                setReviews(response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -72,15 +46,20 @@ const Detail = props => {
     }, [media_type, media_id])
 
     const handleReviewAdd = async () => {
+        setOpen(false)
         try {
+            // サーバー側に新しいレビューを送信する
             const response = await laravelAxios.post(`api/reviews`, {
                 content: comment,
                 rating: rate,
                 media_type: media_type,
                 media_id: media_id,
             })
-            setComment(response.data.comment)
-            setRate(response.data.rating)
+            // クライアント側に新しいレビューを反映する
+            const newReview = response.data
+            setReviews([...reviews, newReview])
+            setComment('')
+            setRate(0)
         } catch (error) {
             console.log(error)
         }
@@ -262,9 +241,10 @@ const Detail = props => {
                         />
                         <Button
                             valiant="outlined"
-                            color="secondary"
+                            color="primary"
                             disabled={isDisabled}
-                            onClick={handleReviewAdd}>
+                            onClick={handleReviewAdd}
+                            style={{ border: 'solid 1px lightBlue' }}>
                             送信
                         </Button>
                     </Box>
