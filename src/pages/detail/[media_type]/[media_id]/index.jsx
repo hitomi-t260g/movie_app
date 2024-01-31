@@ -94,22 +94,24 @@ const Detail = props => {
     }
 
     const handleDeleteReview = async id => {
-        try {
-            // サーバー側のレビューを削除する
-            const response = await laravelAxios.delete(`api/reviews/${id}`)
-            // クライアント側のレビューを削除する
-            if (response.status === 200) {
-                const updatedReviews = reviews.filter(
-                    review => review.id !== id,
-                )
-                setReviews(updatedReviews)
-                updateAverageRating(updatedReviews)
-            }
-        } catch (error) {
-            console.log(error)
-        }
+        if (window.confirm('レビューを削除してもよろしいですか？')) {
+            try {
+                // サーバー側のレビューを削除する
+                const response = await laravelAxios.delete(`api/review/${id}`)
+                // クライアント側のレビューを削除する
+                if (response.status === 200) {
+                    const updatedReviews = reviews.filter(
+                        review => review.id !== id,
+                    )
 
-        // レビューを削除したことをユーザーに知らせる
+                    setReviews(updatedReviews)
+                    updateAverageRating(updatedReviews)
+                    // レビューを削除したことをユーザーに知らせる
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
     }
 
     return (
