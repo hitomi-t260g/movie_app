@@ -2,6 +2,7 @@ import AppLayout from '@/components/Layouts/AppLayout'
 import {
     Box,
     Button,
+    ButtonGroup,
     Card,
     CardContent,
     Container,
@@ -91,6 +92,26 @@ const Detail = props => {
             setAverageRating(averageRating)
         }
     }
+
+    const handleDeleteReview = async id => {
+        try {
+            // サーバー側のレビューを削除する
+            const response = await laravelAxios.delete(`api/reviews/${id}`)
+            // クライアント側のレビューを削除する
+            if (response.status === 200) {
+                const updatedReviews = reviews.filter(
+                    review => review.id !== id,
+                )
+                setReviews(updatedReviews)
+                updateAverageRating(updatedReviews)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+        // レビューを削除したことをユーザーに知らせる
+    }
+
     return (
         <StrictMode>
             <AppLayout
@@ -229,6 +250,25 @@ const Detail = props => {
                                                     paragraph>
                                                     {review.content}
                                                 </Typography>
+                                                <Grid
+                                                    sx={{
+                                                        display: 'flex',
+                                                        justifyContent:
+                                                            'flex-end',
+                                                    }}>
+                                                    <ButtonGroup>
+                                                        <Button>編集</Button>
+                                                        <Button
+                                                            color="error"
+                                                            onClick={() =>
+                                                                handleDeleteReview(
+                                                                    review.id,
+                                                                )
+                                                            }>
+                                                            削除
+                                                        </Button>
+                                                    </ButtonGroup>
+                                                </Grid>
                                             </CardContent>
                                         </Card>
                                     </Grid>
