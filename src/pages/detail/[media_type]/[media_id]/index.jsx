@@ -17,6 +17,7 @@ import laravelAxios from '@/lib/laravelAxios'
 import Head from 'next/head'
 import React, { StrictMode, useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
+import StarIcon from '@mui/icons-material/Star'
 
 const Detail = props => {
     const { detail, media_type, media_id } = props
@@ -24,6 +25,7 @@ const Detail = props => {
     const [rate, setRate] = useState(0)
     const [comment, setComment] = useState('')
     const [reviews, setReviews] = useState([])
+    const [averageRating, setAverageRating] = useState(0)
 
     // commentはスペースも考慮しtrimするのを忘れないように
     const isDisabled = !rate || !comment.trim()
@@ -34,7 +36,10 @@ const Detail = props => {
                 const response = await laravelAxios.get(
                     `api/reviews/${media_type}/${media_id}`,
                 )
-                setReviews(response.data)
+                // 直接response.dataを使わずに一度定数化する
+                const fetchedReviews = response.data
+                setReviews(fetchedReviews)
+                updateAverageRating(fetchedReviews)
             } catch (error) {
                 console.log(error)
             }
@@ -60,11 +65,32 @@ const Detail = props => {
             setReviews([...reviews, newReview])
             setComment('')
             setRate(0)
+
+            const updatedReviews = [...reviews, newReview]
+            updateAverageRating(updatedReviews)
         } catch (error) {
             console.log(error)
         }
     }
 
+    const updateAverageRating = updatedReviews => {
+        if (updatedReviews.length > 0) {
+            // レビューの星の数の合計値を計算する
+            const totalRating = updatedReviews.reduce(
+                (acc, review) => acc + review.rating,
+                0,
+            )
+
+            // レビューの平均値を計算する
+            // toFixedにより、小数点第一位まで四捨五入した値となり、文字列に変換される
+            const averageRating = (totalRating / updatedReviews.length).toFixed(
+                1,
+            )
+
+            // レビューの平均値を更新する
+            setAverageRating(averageRating)
+        }
+    }
     return (
         <StrictMode>
             <AppLayout
@@ -130,6 +156,33 @@ const Detail = props => {
                                 <Typography variant="h4" paragraph>
                                     {detail.title || detail.name}
                                 </Typography>
+                                <Box
+                                    gap={2}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        mb: 2,
+                                    }}>
+                                    <Rating
+                                        readOnly
+                                        precision={0.5}
+                                        emptyIcon={
+                                            <StarIcon
+                                                style={{ color: 'lightgray' }}
+                                            />
+                                        }
+                                        // 小数点をもつnumber型に変換すること
+                                        value={parseFloat(averageRating)}
+                                    />
+                                    <Typography
+                                        sx={{
+                                            ml: 1,
+                                            fontSize: '1.5rem',
+                                            fontWeight: 'bold',
+                                        }}>
+                                        {averageRating}
+                                    </Typography>
+                                </Box>
                                 <Typography paragraph>
                                     {detail.overview}
                                 </Typography>
