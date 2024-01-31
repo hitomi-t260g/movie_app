@@ -19,6 +19,7 @@ import Head from 'next/head'
 import React, { StrictMode, useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import StarIcon from '@mui/icons-material/Star'
+import { useAuth } from '@/hooks/auth'
 
 const Detail = props => {
     const { detail, media_type, media_id } = props
@@ -27,6 +28,8 @@ const Detail = props => {
     const [comment, setComment] = useState('')
     const [reviews, setReviews] = useState([])
     const [averageRating, setAverageRating] = useState(0)
+    //ログインユーザー情報の取得
+    const { user } = useAuth({ middleware: 'auth' })
 
     // commentはスペースも考慮しtrimするのを忘れないように
     const isDisabled = !rate || !comment.trim()
@@ -257,19 +260,27 @@ const Detail = props => {
                                                         display: 'flex',
                                                         justifyContent:
                                                             'flex-end',
+                                                    }}
+                                                    style={{
+                                                        minHeight: '2em',
                                                     }}>
-                                                    <ButtonGroup>
-                                                        <Button>編集</Button>
-                                                        <Button
-                                                            color="error"
-                                                            onClick={() =>
-                                                                handleDeleteReview(
-                                                                    review.id,
-                                                                )
-                                                            }>
-                                                            削除
-                                                        </Button>
-                                                    </ButtonGroup>
+                                                    {user.id ===
+                                                        review.user.id && (
+                                                        <ButtonGroup>
+                                                            <Button>
+                                                                編集
+                                                            </Button>
+                                                            <Button
+                                                                color="error"
+                                                                onClick={() =>
+                                                                    handleDeleteReview(
+                                                                        review.id,
+                                                                    )
+                                                                }>
+                                                                削除
+                                                            </Button>
+                                                        </ButtonGroup>
+                                                    )}
                                                 </Grid>
                                             </CardContent>
                                         </Card>
