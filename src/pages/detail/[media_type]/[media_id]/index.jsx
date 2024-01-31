@@ -264,7 +264,8 @@ const Detail = props => {
                                                     style={{
                                                         minHeight: '2em',
                                                     }}>
-                                                    {user.id ===
+                                                    {/* user情報がundefined時にエラーとならないように?をつける */}
+                                                    {user?.id ===
                                                         review.user.id && (
                                                         <ButtonGroup>
                                                             <Button>
