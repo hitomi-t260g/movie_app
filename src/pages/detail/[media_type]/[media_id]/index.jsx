@@ -28,11 +28,17 @@ const Detail = props => {
     const [comment, setComment] = useState('')
     const [reviews, setReviews] = useState([])
     const [averageRating, setAverageRating] = useState(0)
+    // 編集用state
+    const [editMode, setEditMode] = useState(null)
+    const [editedRating, setEditedRating] = useState(0)
+    const [editedComment, setEditedComment] = useState('')
+
     //ログインユーザー情報の取得
     const { user } = useAuth({ middleware: 'auth' })
 
     // commentはスペースも考慮しtrimするのを忘れないように
     const isDisabled = !rate || !comment.trim()
+    const isConfirmDisabled = !editedRating || !editedComment.trim()
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -115,6 +121,40 @@ const Detail = props => {
                 console.log(error)
             }
         }
+    }
+
+    const handleEdit = review => {
+        setEditMode(review.id)
+        setEditedRating(review.rating)
+        setEditedComment(review.content)
+    }
+
+    const handleConfirmEdit = reviewId => {
+        setEditMode(!reviewId)
+        console.log(reviewId)
+        // サーバー側に編集したレビューを送信する
+        // try {
+        //     const response = await laravelAxios.put(`api/reviews/&{reviewId}`, {
+        //         content: editedComment,
+        //         rating: editedRating,
+        //     })
+        // } catch (error) {
+        //     console.log(error)
+        // }
+
+        // クライアント側に編集後のレビューを反映する
+        const updatedReviews = reviews.map(review => {
+            if (review.id === reviewId) {
+                return {
+                    ...review,
+                    content: editedComment,
+                    rating: editedRating,
+                }
+            }
+            return review
+        })
+        setReviews(updatedReviews)
+        updateAverageRating(updatedReviews)
     }
 
     return (
@@ -245,16 +285,53 @@ const Detail = props => {
                                                     gutterButtom>
                                                     {review.user.name}
                                                 </Typography>
-                                                <Rating
-                                                    value={review.rating}
-                                                    readOnly
-                                                />
-                                                <Typography
-                                                    variant="body2"
-                                                    color="textSecondary"
-                                                    paragraph>
-                                                    {review.content}
-                                                </Typography>
+                                                {editMode === review.id ? (
+                                                    // 編集ボタンを押された時のレビュー表示
+                                                    <>
+                                                        <Rating
+                                                            value={editedRating}
+                                                            onChange={(
+                                                                e,
+                                                                newValue,
+                                                            ) =>
+                                                                setEditedRating(
+                                                                    newValue,
+                                                                )
+                                                            }
+                                                        />
+                                                        <TextareaAutosize
+                                                            minRows={3}
+                                                            style={{
+                                                                width: '100%',
+                                                            }}
+                                                            value={
+                                                                editedComment
+                                                            }
+                                                            onChange={e =>
+                                                                setEditedComment(
+                                                                    e.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                        />
+                                                    </>
+                                                ) : (
+                                                    // 通常時のレビュー表示
+                                                    <>
+                                                        <Rating
+                                                            value={
+                                                                review.rating
+                                                            }
+                                                            readOnly
+                                                        />
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="textSecondary"
+                                                            paragraph>
+                                                            {review.content}
+                                                        </Typography>
+                                                    </>
+                                                )}
                                                 <Grid
                                                     sx={{
                                                         display: 'flex',
@@ -268,18 +345,40 @@ const Detail = props => {
                                                     {user?.id ===
                                                         review.user.id && (
                                                         <ButtonGroup>
-                                                            <Button>
-                                                                編集
-                                                            </Button>
-                                                            <Button
-                                                                color="error"
-                                                                onClick={() =>
-                                                                    handleDeleteReview(
-                                                                        review.id,
-                                                                    )
-                                                                }>
-                                                                削除
-                                                            </Button>
+                                                            {editMode ===
+                                                            review.id ? (
+                                                                <Button
+                                                                    onClick={() =>
+                                                                        handleConfirmEdit(
+                                                                            review.id,
+                                                                        )
+                                                                    }
+                                                                    disabled={
+                                                                        isConfirmDisabled
+                                                                    }>
+                                                                    編集確定
+                                                                </Button>
+                                                            ) : (
+                                                                <>
+                                                                    <Button
+                                                                        onClick={() =>
+                                                                            handleEdit(
+                                                                                review,
+                                                                            )
+                                                                        }>
+                                                                        編集
+                                                                    </Button>
+                                                                    <Button
+                                                                        color="error"
+                                                                        onClick={() =>
+                                                                            handleDeleteReview(
+                                                                                review.id,
+                                                                            )
+                                                                        }>
+                                                                        削除
+                                                                    </Button>
+                                                                </>
+                                                            )}
                                                         </ButtonGroup>
                                                     )}
                                                 </Grid>
