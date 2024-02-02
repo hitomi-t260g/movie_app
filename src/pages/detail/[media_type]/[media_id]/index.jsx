@@ -125,32 +125,34 @@ const Detail = props => {
         setEditedComment(review.content)
     }
 
-    const handleConfirmEdit = reviewId => {
-        setEditMode(!reviewId)
-        console.log(reviewId)
+    const handleConfirmEdit = async reviewId => {
+        setEditMode(null)
         // サーバー側に編集したレビューを送信する
-        // try {
-        //     const response = await laravelAxios.put(`api/reviews/&{reviewId}`, {
-        //         content: editedComment,
-        //         rating: editedRating,
-        //     })
-        // } catch (error) {
-        //     console.log(error)
-        // }
+        try {
+            const response = await laravelAxios.put(`api/review/${reviewId}`, {
+                content: editedComment,
+                rating: editedRating,
+            })
 
-        // クライアント側に編集後のレビューを反映する
-        const updatedReviews = reviews.map(review => {
-            if (review.id === reviewId) {
-                return {
-                    ...review,
-                    content: editedComment,
-                    rating: editedRating,
-                }
+            if (response.status === 200) {
+                // クライアント側に編集後のレビューを反映する
+                const updatedReview = response.data
+                const updatedReviews = reviews.map(review => {
+                    if (review.id === reviewId) {
+                        return {
+                            ...review,
+                            content: updatedReview.content,
+                            rating: updatedReview.rating,
+                        }
+                    }
+                    return review
+                })
+                setReviews(updatedReviews)
+                updateAverageRating(updatedReviews)
             }
-            return review
-        })
-        setReviews(updatedReviews)
-        updateAverageRating(updatedReviews)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const isButtonDisabled = (rate, comment) => {
