@@ -36,10 +36,6 @@ const Detail = props => {
     //ログインユーザー情報の取得
     const { user } = useAuth({ middleware: 'auth' })
 
-    // commentはスペースも考慮しtrimするのを忘れないように
-    const isDisabled = !rate || !comment.trim()
-    const isConfirmDisabled = !editedRating || !editedComment.trim()
-
     useEffect(() => {
         const fetchReviews = async () => {
             try {
@@ -155,6 +151,11 @@ const Detail = props => {
         })
         setReviews(updatedReviews)
         updateAverageRating(updatedReviews)
+    }
+
+    const isButtonDisabled = (rate, comment) => {
+        // commentはスペースも考慮しtrimするのを忘れないように
+        return !rate || !comment.trim()
     }
 
     return (
@@ -353,9 +354,10 @@ const Detail = props => {
                                                                             review.id,
                                                                         )
                                                                     }
-                                                                    disabled={
-                                                                        isConfirmDisabled
-                                                                    }>
+                                                                    disabled={isButtonDisabled(
+                                                                        editedRating,
+                                                                        editedComment,
+                                                                    )}>
                                                                     編集確定
                                                                 </Button>
                                                             ) : (
@@ -448,7 +450,7 @@ const Detail = props => {
                         <Button
                             valiant="outlined"
                             color="primary"
-                            disabled={isDisabled}
+                            disabled={isButtonDisabled(rate, comment)}
                             onClick={handleReviewAdd}
                             style={{ border: 'solid 1px lightBlue' }}>
                             送信
