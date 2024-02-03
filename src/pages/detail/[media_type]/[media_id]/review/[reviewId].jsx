@@ -15,31 +15,20 @@ const ReviewDetail = () => {
         if (!reviewId) {
             return
         }
-        const fetchReviewDetail = async () => {
-            try {
-                const response = await laravelAxios.get(
-                    `api/reviews/${reviewId}`,
-                )
-                // 直接response.dataを使わずに一度定数化する
-                const fetchedReview = response.data
-                return fetchedReview
-            } catch (error) {
-                console.log(error)
-            }
-        }
+
         const fetchComments = async () => {
             try {
                 const response = await laravelAxios.get(
-                    `api/reviews/${reviewId}`,
+                    `api/review/${reviewId}`,
                 )
                 // 直接response.dataを使わずに一度定数化する
                 const fetchedComments = response.data
                 return fetchedComments
             } catch (error) {
-                console.log(error)
+                console.error(error)
             }
         }
-        fetchReviewDetail()
+        // fetchReviewDetail()
         fetchComments()
 
         // reviewIdが変わるとfetchするようにする
