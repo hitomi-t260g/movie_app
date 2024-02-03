@@ -1,8 +1,50 @@
 import AppLayout from '@/components/Layouts/AppLayout'
+import laravelAxios from '@/lib/laravelAxios'
 import Head from 'next/head'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 
 const ReviewDetail = () => {
+    const router = useRouter()
+    // reviewIdはファイル名と一致させること
+    const { reviewId } = router.query
+
+    // 特定のレビューのみフェッチする
+    // レビューに対するコメントフェッチする
+    useEffect(() => {
+        if (!reviewId) {
+            return
+        }
+        const fetchReviewDetail = async () => {
+            try {
+                const response = await laravelAxios.get(
+                    `api/reviews/${reviewId}`,
+                )
+                // 直接response.dataを使わずに一度定数化する
+                const fetchedReview = response.data
+                return fetchedReview
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        const fetchComments = async () => {
+            try {
+                const response = await laravelAxios.get(
+                    `api/reviews/${reviewId}`,
+                )
+                // 直接response.dataを使わずに一度定数化する
+                const fetchedComments = response.data
+                return fetchedComments
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchReviewDetail()
+        fetchComments()
+
+        // reviewIdが変わるとfetchするようにする
+    }, [reviewId])
+
     return (
         <AppLayout
             header={
