@@ -46,7 +46,10 @@ const ReviewDetail = () => {
         setCommentContent(e.target.value)
     }
 
-    const handleCommentAdd = () => {
+    const handleCommentAdd = e => {
+        // onSubmit時に再レンダリングするのを防ぐ
+        e.preventDefault()
+
         // サーバー側に新しいコメントを送信する
         // try {
         //     const response = await laravelAxios.post('/api/comments', {

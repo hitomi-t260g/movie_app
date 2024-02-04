@@ -7,7 +7,7 @@ const CommentForm = props => {
     return (
         <Box
             component="form"
-            onSubmit={handleCommentAdd}
+            onSubmit={e => handleCommentAdd(e)}
             noValidate
             autoComplete="off"
             p={2}
