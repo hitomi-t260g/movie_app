@@ -28,8 +28,16 @@ const Comment = props => {
                 </Typography>
 
                 <Grid container justifyContent="flex-end">
-                    <ButtonGroup>
-                        <Button>編集</Button>
+                    <ButtonGroup sx={{ gap: 1 }}>
+                        <Button
+                            //  muiの何かがうまくいかず、marginをつけると右側の線が消えてしまうため直接指定する
+                            style={{
+                                borderRight:
+                                    '1px solid rgba(25, 118, 210, 0.5)',
+                                borderRadius: '4px',
+                            }}>
+                            編集
+                        </Button>
                         <Button color="error" onClick={() => handleDelete(id)}>
                             削除
                         </Button>

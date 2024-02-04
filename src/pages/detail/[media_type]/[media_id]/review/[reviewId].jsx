@@ -118,7 +118,12 @@ const ReviewDetail = () => {
                                 handleChange={handleCommentChange}
                             />
                         </Card>
-
+                        <Typography
+                            variant="h5"
+                            component="h5"
+                            sx={{ my: 2, textAlign: 'center' }}>
+                            コメント一覧
+                        </Typography>
                         {/* コメント */}
                         <CommentList
                             comments={comments}
