@@ -76,6 +76,7 @@ const ReviewDetail = () => {
             console.log(error)
         }
     }
+
     return (
         <AppLayout
             header={
@@ -119,7 +120,10 @@ const ReviewDetail = () => {
                         </Card>
 
                         {/* コメント */}
-                        <CommentList comments={comments} />
+                        <CommentList
+                            comments={comments}
+                            setComments={setComments}
+                        />
                     </>
                 ) : (
                     <div>Loading...</div>

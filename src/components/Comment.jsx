@@ -9,7 +9,7 @@ import {
 import React from 'react'
 
 const Comment = props => {
-    const { userName, content } = props
+    const { userName, content, id, handleDelete } = props
 
     return (
         <Card>
@@ -30,7 +30,9 @@ const Comment = props => {
                 <Grid container justifyContent="flex-end">
                     <ButtonGroup>
                         <Button>編集</Button>
-                        <Button color="error">削除</Button>
+                        <Button color="error" onClick={() => handleDelete(id)}>
+                            削除
+                        </Button>
                     </ButtonGroup>
                 </Grid>
             </CardContent>
