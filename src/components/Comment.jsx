@@ -1,6 +1,12 @@
-import { ButtonGroup, Card, CardContent, Grid, Typography } from '@mui/material'
+import {
+    Button,
+    ButtonGroup,
+    Card,
+    CardContent,
+    Grid,
+    Typography,
+} from '@mui/material'
 import React from 'react'
-import Button from './Button'
 
 const Comment = props => {
     const { userName, content } = props
