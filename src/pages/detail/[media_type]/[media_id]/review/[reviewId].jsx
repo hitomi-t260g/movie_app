@@ -1,3 +1,4 @@
+import CommentForm from '@/components/CommentForm'
 import CommentList from '@/components/CommentList'
 import AppLayout from '@/components/Layouts/AppLayout'
 import laravelAxios from '@/lib/laravelAxios'
@@ -9,6 +10,7 @@ import React, { useEffect, useState } from 'react'
 const ReviewDetail = () => {
     const [review, setReview] = useState(null)
     const [comments, setComments] = useState([])
+    const [commentContent, setCommentContent] = useState('')
 
     const router = useRouter()
     // reviewIdはファイル名と一致させること
@@ -39,7 +41,36 @@ const ReviewDetail = () => {
 
         // reviewIdが変わるとfetchするようにする
     }, [reviewId])
-    console.log(review)
+
+    const handleCommentChange = e => {
+        setCommentContent(e.target.value)
+    }
+
+    const handleCommentAdd = () => {
+        // サーバー側に新しいコメントを送信する
+        // try {
+        //     const response = await laravelAxios.post('/api/comments', {
+        //         content: commentContent,
+        //         review_id: review.id,
+        //     })
+
+        // クライアント側に新しいコメントを反映する
+        const newComment = {
+            id: 5,
+            content: 'サンプル投稿サンプルです',
+            review_id: review.id,
+            user: {
+                id: 1,
+                name: '山田花子',
+            },
+        }
+        // const newComment = response.data
+        setComments([...comments, newComment])
+        setCommentContent('')
+        // } catch (error) {
+        //     console.log(error)
+        // }
+    }
     return (
         <AppLayout
             header={
@@ -74,6 +105,12 @@ const ReviewDetail = () => {
                                     {review.content}
                                 </Typography>
                             </CardContent>
+                            {/* 返信用のフォーム */}
+                            <CommentForm
+                                handleCommentAdd={handleCommentAdd}
+                                content={commentContent}
+                                handleChange={handleCommentChange}
+                            />
                         </Card>
 
                         {/* コメント */}
