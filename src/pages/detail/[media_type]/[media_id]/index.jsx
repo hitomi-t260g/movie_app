@@ -273,7 +273,7 @@ const Detail = props => {
                         component={'h1'}
                         variant="h4"
                         align="center"
-                        gutterBottom>
+                        sx={{ mb: 2 }}>
                         レビュー一覧
                     </Typography>
                     {reviews.length > 0 ? (
@@ -285,8 +285,7 @@ const Detail = props => {
                                             <CardContent>
                                                 <Typography
                                                     component="div"
-                                                    variant="h6"
-                                                    gutterButtom>
+                                                    variant="h6">
                                                     {review.user.name}
                                                 </Typography>
                                                 {editMode === review.id ? (
