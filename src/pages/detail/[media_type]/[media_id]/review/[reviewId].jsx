@@ -64,14 +64,10 @@ const ReviewDetail = () => {
             })
 
             // クライアント側に新しいコメントを反映する
+            // API作成前のコメントサンプル
             // const newComment = {
-            //     id: 5,
             //     content: 'サンプル投稿サンプルです',
             //     review_id: review.id,
-            //     user: {
-            //         id: 1,
-            //         name: '山田花子',
-            //     },
             // }
             const newComment = response.data
             setComments([...comments, newComment])
