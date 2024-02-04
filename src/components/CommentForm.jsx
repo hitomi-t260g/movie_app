@@ -29,12 +29,10 @@ const CommentForm = props => {
                 sx={{ mr: 1, flexGrow: 1 }}
             />
             <Button
-                variant="contained"
+                variant="outlined"
                 type="submit"
-                style={{
-                    backgroundColor: '#1976d2',
-                    color: '#fff',
-                }}>
+                color="success"
+                disabled={!content}>
                 送信
             </Button>
         </Box>
