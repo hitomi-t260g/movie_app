@@ -46,33 +46,39 @@ const ReviewDetail = () => {
         setCommentContent(e.target.value)
     }
 
-    const handleCommentAdd = e => {
+    const handleCommentAdd = async e => {
         // onSubmit時に再レンダリングするのを防ぐ
         e.preventDefault()
+        // スペースや空の場合はなにもしない trimで空文字を削除するのでスペース避けになる
+        const trimmedCommentContent = commentContent.trim()
+
+        if (!trimmedCommentContent) {
+            return
+        }
 
         // サーバー側に新しいコメントを送信する
-        // try {
-        //     const response = await laravelAxios.post('/api/comments', {
-        //         content: commentContent,
-        //         review_id: review.id,
-        //     })
+        try {
+            const response = await laravelAxios.post('/api/comments', {
+                content: trimmedCommentContent,
+                review_id: reviewId,
+            })
 
-        // クライアント側に新しいコメントを反映する
-        const newComment = {
-            id: 5,
-            content: 'サンプル投稿サンプルです',
-            review_id: review.id,
-            user: {
-                id: 1,
-                name: '山田花子',
-            },
+            // クライアント側に新しいコメントを反映する
+            // const newComment = {
+            //     id: 5,
+            //     content: 'サンプル投稿サンプルです',
+            //     review_id: review.id,
+            //     user: {
+            //         id: 1,
+            //         name: '山田花子',
+            //     },
+            // }
+            const newComment = response.data
+            setComments([...comments, newComment])
+            setCommentContent('')
+        } catch (error) {
+            console.log(error)
         }
-        // const newComment = response.data
-        setComments([...comments, newComment])
-        setCommentContent('')
-        // } catch (error) {
-        //     console.log(error)
-        // }
     }
     return (
         <AppLayout
