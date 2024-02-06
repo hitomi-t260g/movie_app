@@ -20,6 +20,7 @@ import React, { StrictMode, useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import StarIcon from '@mui/icons-material/Star'
 import { useAuth } from '@/hooks/auth'
+import Link from 'next/link'
 
 const Detail = props => {
     const { detail, media_type, media_id } = props
@@ -272,7 +273,7 @@ const Detail = props => {
                         component={'h1'}
                         variant="h4"
                         align="center"
-                        gutterBottom>
+                        sx={{ mb: 2 }}>
                         レビュー一覧
                     </Typography>
                     {reviews.length > 0 ? (
@@ -284,8 +285,7 @@ const Detail = props => {
                                             <CardContent>
                                                 <Typography
                                                     component="div"
-                                                    variant="h6"
-                                                    gutterButtom>
+                                                    variant="h6">
                                                     {review.user.name}
                                                 </Typography>
                                                 {editMode === review.id ? (
@@ -327,12 +327,15 @@ const Detail = props => {
                                                             }
                                                             readOnly
                                                         />
-                                                        <Typography
-                                                            variant="body2"
-                                                            color="textSecondary"
-                                                            paragraph>
-                                                            {review.content}
-                                                        </Typography>
+                                                        <Link
+                                                            href={`/detail/${media_type}/${media_id}/review/${review.id}`}>
+                                                            <Typography
+                                                                variant="body2"
+                                                                color="textSecondary"
+                                                                paragraph>
+                                                                {review.content}
+                                                            </Typography>
+                                                        </Link>
                                                     </>
                                                 )}
                                                 <Grid
