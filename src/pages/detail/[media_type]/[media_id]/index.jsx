@@ -40,7 +40,7 @@ const Detail = props => {
     const { user } = useAuth({ middleware: 'auth' })
 
     // お気に入り制御
-    const [favorite, setFavorite] = useState(false)
+    const [isFavorite, setIsFavorite] = useState(false)
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -61,8 +61,8 @@ const Detail = props => {
                 const response = await laravelAxios.get(
                     `api/favorite/${media_type}/${media_id}`,
                 )
-                const fetchedFavorite = response.data
-                setFavorite(fetchedFavorite)
+                const isExistedFavorite = response.data.status
+                setIsFavorite(isExistedFavorite)
             } catch (error) {
                 console.log(error)
             }
@@ -188,7 +188,13 @@ const Detail = props => {
 
             if (response.status === 200) {
                 // クライアント側にお気に入り状況の変更を反映する
-                setFavorite(!favorite)
+                if (response.data.status === 'added') {
+                    setIsFavorite(true)
+                } else {
+                    setIsFavorite(false)
+                }
+                // なお以下のように書くことも可能だが、可読性が低いので不採用
+                // setIsFavorite(response.data.status === 'added')
             }
         } catch (error) {
             console.log(error)
@@ -289,12 +295,11 @@ const Detail = props => {
                                 {/* //お気に入り */}
                                 <IconButton
                                     style={{
-                                        color: favorite ? 'red' : 'white',
+                                        color: isFavorite ? 'red' : 'white',
                                         background: '#0d253f',
-                                    }}>
-                                    <FavoriteIcon
-                                        onClick={handleToggleFavorite}
-                                    />
+                                    }}
+                                    onClick={handleToggleFavorite}>
+                                    <FavoriteIcon />
                                 </IconButton>
                                 <Typography paragraph>
                                     {detail.overview}
