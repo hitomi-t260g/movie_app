@@ -8,6 +8,7 @@ import {
     Container,
     Fab,
     Grid,
+    IconButton,
     Modal,
     Rating,
     TextareaAutosize,
@@ -21,6 +22,7 @@ import AddIcon from '@mui/icons-material/Add'
 import StarIcon from '@mui/icons-material/Star'
 import { useAuth } from '@/hooks/auth'
 import Link from 'next/link'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 const Detail = props => {
     const { detail, media_type, media_id } = props
@@ -37,6 +39,9 @@ const Detail = props => {
     //ログインユーザー情報の取得
     const { user } = useAuth({ middleware: 'auth' })
 
+    // お気に入り制御
+    const [favorite, setFavorite] = useState(false)
+
     useEffect(() => {
         const fetchReviews = async () => {
             try {
@@ -51,8 +56,20 @@ const Detail = props => {
                 console.log(error)
             }
         }
+        const fetchFavorite = async () => {
+            try {
+                const response = await laravelAxios.get(
+                    `api/favorite/${media_type}/${media_id}`,
+                )
+                const fetchedFavorite = response.data
+                setFavorite(fetchedFavorite)
+            } catch (error) {
+                console.log(error)
+            }
+        }
 
         fetchReviews()
+        fetchFavorite()
 
         // urlが変わるとfetchするようにする
     }, [media_type, media_id])
@@ -161,6 +178,22 @@ const Detail = props => {
         return !rate || !comment.trim()
     }
 
+    const handleToggleFavorite = async () => {
+        // サーバー側にお気に入り状況の変更を送信する
+        try {
+            const response = await laravelAxios.post(`api/favorite`, {
+                media_type: media_type,
+                media_id: media_id,
+            })
+
+            if (response.status === 200) {
+                // クライアント側にお気に入り状況の変更を反映する
+                setFavorite(!favorite)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <StrictMode>
             <AppLayout
@@ -253,6 +286,16 @@ const Detail = props => {
                                         {averageRating}
                                     </Typography>
                                 </Box>
+                                {/* //お気に入り */}
+                                <IconButton
+                                    style={{
+                                        color: favorite ? 'red' : 'white',
+                                        background: '#0d253f',
+                                    }}>
+                                    <FavoriteIcon
+                                        onClick={handleToggleFavorite}
+                                    />
+                                </IconButton>
                                 <Typography paragraph>
                                     {detail.overview}
                                 </Typography>
@@ -368,6 +411,11 @@ const Detail = props => {
                                                             ) : (
                                                                 <>
                                                                     <Button
+                                                                        //  muiの何かがうまくいかず、marginをつけると右側の線が消えてしまうため直接指定する
+                                                                        style={{
+                                                                            marginRight:
+                                                                                '8px',
+                                                                        }}
                                                                         onClick={() =>
                                                                             handleEdit(
                                                                                 review,
