@@ -45,31 +45,27 @@ const Detail = props => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await laravelAxios.get(
-                    `api/reviews/${media_type}/${media_id}`,
-                )
+                const [reviewResponse, favoriteResponse] = await Promise.all([
+                    laravelAxios.get(`api/reviews/${media_type}/${media_id}`),
+                    laravelAxios.get(`api/favorites/status`, {
+                        params: {
+                            media_type: media_type,
+                            media_id: media_id,
+                        },
+                    }),
+                ])
                 // 直接response.dataを使わずに一度定数化する
-                const fetchedReviews = response.data
+                const fetchedReviews = reviewResponse.data
                 setReviews(fetchedReviews)
                 updateAverageRating(fetchedReviews)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        const fetchFavorite = async () => {
-            try {
-                const response = await laravelAxios.get(
-                    `api/favorite/${media_type}/${media_id}`,
-                )
-                const isExistedFavorite = response.data.status
-                setIsFavorite(isExistedFavorite)
+                const fetchedFavorite = favoriteResponse.data
+                setIsFavorite(fetchedFavorite)
             } catch (error) {
                 console.log(error)
             }
         }
 
         fetchReviews()
-        fetchFavorite()
 
         // urlが変わるとfetchするようにする
     }, [media_type, media_id])
