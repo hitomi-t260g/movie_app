@@ -40,36 +40,32 @@ const Detail = props => {
     const { user } = useAuth({ middleware: 'auth' })
 
     // お気に入り制御
-    const [favorite, setFavorite] = useState(false)
+    const [isFavorite, setIsFavorite] = useState(false)
 
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await laravelAxios.get(
-                    `api/reviews/${media_type}/${media_id}`,
-                )
+                const [reviewResponse, favoriteResponse] = await Promise.all([
+                    laravelAxios.get(`api/reviews/${media_type}/${media_id}`),
+                    laravelAxios.get(`api/favorites/status`, {
+                        params: {
+                            media_type: media_type,
+                            media_id: media_id,
+                        },
+                    }),
+                ])
                 // 直接response.dataを使わずに一度定数化する
-                const fetchedReviews = response.data
+                const fetchedReviews = reviewResponse.data
                 setReviews(fetchedReviews)
                 updateAverageRating(fetchedReviews)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        const fetchFavorite = async () => {
-            try {
-                const response = await laravelAxios.get(
-                    `api/favorite/${media_type}/${media_id}`,
-                )
-                const fetchedFavorite = response.data
-                setFavorite(fetchedFavorite)
+                const fetchedFavorite = favoriteResponse.data
+                setIsFavorite(fetchedFavorite)
             } catch (error) {
                 console.log(error)
             }
         }
 
         fetchReviews()
-        fetchFavorite()
 
         // urlが変わるとfetchするようにする
     }, [media_type, media_id])
@@ -188,7 +184,13 @@ const Detail = props => {
 
             if (response.status === 200) {
                 // クライアント側にお気に入り状況の変更を反映する
-                setFavorite(!favorite)
+                if (response.data.status === 'added') {
+                    setIsFavorite(true)
+                } else {
+                    setIsFavorite(false)
+                }
+                // なお以下のように書くことも可能だが、可読性が低いので不採用
+                // setIsFavorite(response.data.status === 'added')
             }
         } catch (error) {
             console.log(error)
@@ -289,12 +291,11 @@ const Detail = props => {
                                 {/* //お気に入り */}
                                 <IconButton
                                     style={{
-                                        color: favorite ? 'red' : 'white',
+                                        color: isFavorite ? 'red' : 'white',
                                         background: '#0d253f',
-                                    }}>
-                                    <FavoriteIcon
-                                        onClick={handleToggleFavorite}
-                                    />
+                                    }}
+                                    onClick={handleToggleFavorite}>
+                                    <FavoriteIcon />
                                 </IconButton>
                                 <Typography paragraph>
                                     {detail.overview}

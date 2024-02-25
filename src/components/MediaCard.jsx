@@ -10,7 +10,7 @@ import Link from 'next/link'
 import React from 'react'
 
 const MediaCard = props => {
-    const { media } = props
+    const { media, isContent = true } = props
     const mediaPath = media.poster_path
         ? `https:image.tmdb.org/t/p/original${media.poster_path}`
         : '/media_poster_image/NO+IMAGE.png'
@@ -24,17 +24,19 @@ const MediaCard = props => {
                             sx={{ aspectRatio: '2/3' }}
                             image={mediaPath}
                         />
-                        <CardContent>
-                            <Typography variant="h6" component="div" noWrap>
-                                {media.title || media.name}
-                            </Typography>
-                            <Typography
-                                variant="subtitle1"
-                                color="textSecondary">
-                                公開日:
-                                {media.release_date || media.first_air_date}
-                            </Typography>
-                        </CardContent>
+                        {isContent && (
+                            <CardContent>
+                                <Typography variant="h6" component="div" noWrap>
+                                    {media.title || media.name}
+                                </Typography>
+                                <Typography
+                                    variant="subtitle1"
+                                    color="textSecondary">
+                                    公開日:
+                                    {media.release_date || media.first_air_date}
+                                </Typography>
+                            </CardContent>
+                        )}
                     </Link>
                 </CardActionArea>
             </Card>
